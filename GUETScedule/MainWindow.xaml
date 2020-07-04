@@ -1,0 +1,201 @@
+﻿<Window x:Class="WPFGUETSchedule.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFGUETSchedule"
+        mc:Ignorable="d"
+        Title="桂电课程表" Height="600" Width="1200" Icon="/WPFGUETSchedule;component/Pics/logo [64x64].ico">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StatusBar Height="30" DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+            <Label x:Name="statusLabel"/>
+        </StatusBar>
+        <TabControl x:Name="mainPage" FontSize="16" DockPanel.Dock="Top" Margin="0,0,0,30" Background="White" >
+            <TabItem x:Name="loginTabitem" >
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                        <GradientStop Color="White" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/WPFGUETSchedule;component/Pics/keys.png" Height="25" Width="25"/>
+                        <TextBlock Text="登录" FontSize="18"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid Background="White" Width="817">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.333333333333333*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="桂电课程表Windows版" Grid.Column="1" HorizontalAlignment="Left" Margin="148,10,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="24"/>
+                    <Label Content="WebVpn帐号：" Grid.Column="1" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="webVpnUsername" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="125,64,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" ToolTip="学号，如: 2000110101"/>
+                    <Label Content="WebVpn密码：" Grid.Column="1" HorizontalAlignment="Left" Margin="10,95,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="webVpnPassword" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="125,99,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="200" ToolTip="一般为身份证后六位"/>
+                    <Label Content="教务系统密码：" Grid.Column="1" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="eduSysPassword" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="125,131,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" ToolTip="你的教务系统密码、"/>
+                    <TextBox x:Name="logTextBox" HorizontalAlignment="Left" Height="156" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="768" Grid.Row="1" IsReadOnly="True" FontSize="14" FontFamily="Arial" Grid.ColumnSpan="2" AllowDrop="False" HorizontalScrollBarVisibility="Auto" IsTabStop="False" IsUndoEnabled="False" IsReadOnlyCaretVisible="True"/>
+                    <Button x:Name="logoutButton" Content="注销" Grid.Column="1" HorizontalAlignment="Left" Margin="463,118,0,0" VerticalAlignment="Top" Width="100" Height="36" Click="logoutButton_Click"/>
+                    <Button x:Name="loginButton" Content="登录" Grid.Column="1" HorizontalAlignment="Left" Margin="348,118,0,0" VerticalAlignment="Top" Width="100" Height="36" Click="loginButton_Click"/>
+                    <Image HorizontalAlignment="Left" Height="166" Margin="25,10,0,0" VerticalAlignment="Top" Width="177" Source="/WPFGUETSchedule;component/Pics/logo.png" Grid.ColumnSpan="2"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="selectedCourseTabitem">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                        <GradientStop Color="White" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/WPFGUETSchedule;component/Pics/course.png" Height="25" Width="25" />
+                        <TextBlock Text="已选课程" FontSize="18"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid Margin="0,0,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <ComboBox x:Name="selectedCourseComboBox" Text="{Binding semesterComboBox}" HorizontalAlignment="Left" Margin="93,5,0,0" VerticalAlignment="Top" Width="200" SelectionChanged="semesterComboBox_SelectionChanged"/>
+                    <Label Content="选择学期:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,5,0,0"/>
+                    <ListView Margin="0,35,0,0" Name="selectCourseListView" ItemsSource="{Binding courseList}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="课程序号" DisplayMemberBinding="{Binding CourseIndex}" Width="80"/>
+                                <GridViewColumn Header="课程代码" DisplayMemberBinding="{Binding CourseCode}" Width="130"/>
+                                <GridViewColumn Header="课程名称" DisplayMemberBinding="{Binding CourseName}" Width="300"/>
+                                <GridViewColumn Header="教师" DisplayMemberBinding="{Binding Teacher}" Width="70"/>
+                                <GridViewColumn Header="选课类型" DisplayMemberBinding="{Binding CourseType}" Width="70"/>
+                                <GridViewColumn Header="考试时间" DisplayMemberBinding="{Binding ExamTime}" Width="70"/>
+                                <GridViewColumn Header="收费否" DisplayMemberBinding="{Binding IsCharged}" Width="70"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="todayScheduleTabitem" MouseDown="todayScheduleTabitem_MouseDown">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal" MouseDown="StackPanel_MouseDown">
+                        <Image Source="/WPFGUETSchedule;component/Pics/calendar.png"  Height="25" Width="25" />
+                        <TextBlock Text="本日课表" />
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Label x:Name="todayLabel" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="29" Width="500"/>
+                    <ListView x:Name="todayScheduleListView"  ItemsSource="{Binding todayList}" Margin="0,44,0,0">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="时间" Width="150" DisplayMemberBinding="{Binding Header}"/>
+                                <GridViewColumn Header="课程" Width="150" DisplayMemberBinding="{Binding Course}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <ComboBox x:Name="weekComboBox2" HorizontalAlignment="Left" Margin="759,9,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="weekComboBox2_SelectionChanged" ItemsSource="{Binding weekList}"/>
+                    <Label x:Name="chooseWeekLabel" Content="第一次使用,请选择周数:" HorizontalAlignment="Left" Margin="576,5,0,0" VerticalAlignment="Top"/>
+                    <Button x:Name="resetButton" Content="重置" HorizontalAlignment="Left" Margin="1046,10,0,0" VerticalAlignment="Top" Width="76" Click="ResetButton_Click" IsEnabled="False"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="scheduleTabitem" >
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/WPFGUETSchedule;component/Pics/course.png" Height="25" Width="25"/>
+                        <TextBlock Text="学期课表"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <ComboBox x:Name="semesterComboBox2" Height="26" VerticalAlignment="Top" Margin="93,10,0,0" HorizontalAlignment="Left" Width="200" ItemsSource="{Binding semesterList}" SelectionChanged="semesterComboBox2_SelectionChanged"/>
+                    <ListView x:Name="weekScheduleListView" Margin="0,43,0,0" ItemsSource="{Binding courseScheduleList}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header=""  DisplayMemberBinding="{Binding Header}"/>
+                                <GridViewColumn Header="星期一" Width="150"  DisplayMemberBinding="{Binding Monday}"/>
+                                <GridViewColumn Header="星期二" Width="150" DisplayMemberBinding="{Binding Tuesday}"/>
+                                <GridViewColumn Header="星期三"  Width="150" DisplayMemberBinding="{Binding Wednesday}"/>
+                                <GridViewColumn Header="星期四"  Width="150" DisplayMemberBinding="{Binding Thursday}"/>
+                                <GridViewColumn Header="星期五"  Width="150" DisplayMemberBinding="{Binding Friday}"/>
+                                <GridViewColumn Header="星期六"  Width="150" DisplayMemberBinding="{Binding Saturday}"/>
+                                <GridViewColumn Header="星期天"   Width="150" DisplayMemberBinding="{Binding Sunday}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Label Content="选择学期:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,8,0,0"/>
+                    <ComboBox x:Name="weekComboBox" Height="26" VerticalAlignment="Top" Margin="372,10,0,0" ItemsSource="{Binding weekList}" SelectionChanged="weekComboBox_SelectionChanged" Width="120" HorizontalAlignment="Left" IsEnabled="False"/>
+                    <Label Content="周数：" HorizontalAlignment="Left" Margin="314,8,0,0" VerticalAlignment="Top"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="scoreTabitem" MouseDown="scoreTabitem_MouseDown">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal" MouseDown="scoreStackPanel_MouseDown" >
+                        <TextBlock Text="★课程成绩" />
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <ListView x:Name ="scoreListView" ItemsSource="{Binding scoreList}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="学期" Width="150" DisplayMemberBinding="{Binding Term}"/>
+                                <GridViewColumn Header="课程名称" Width="200" DisplayMemberBinding="{Binding Name}"/>
+                                <GridViewColumn Header="课程代码" Width="150" DisplayMemberBinding="{Binding Code}"/>
+                                <GridViewColumn Header="分数" Width="70" DisplayMemberBinding="{Binding Score}"/>
+                                <GridViewColumn Header="学分" Width="70" DisplayMemberBinding="{Binding Credit}"/>
+                                <GridViewColumn Header="课程性质" Width="150" DisplayMemberBinding="{Binding Type}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="creditTabitem" MouseDown="creditTabitem_MouseDown">
+                <TabItem.Header>
+                    <TextBlock Text="✔已得学分" MouseDown="TextBlock_MouseDown"/>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="223*"/>
+                        <ColumnDefinition Width="964*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView x:Name="creditListView" ItemsSource="{Binding creditList}" Grid.ColumnSpan="2">
+                        <ListView.View>
+                            <GridView >
+                                <GridViewColumn Header="学期" Width="120" DisplayMemberBinding="{Binding Term}"/>
+                                <GridViewColumn Header="课程代码" Width="120" DisplayMemberBinding="{Binding Code}"/>
+                                <GridViewColumn Header="课程名称" Width="300" DisplayMemberBinding="{Binding Name}"/>
+                                <GridViewColumn Header="学分" Width="50" DisplayMemberBinding="{Binding Credit}"/>
+                                <GridViewColumn Header="成绩" Width="50" DisplayMemberBinding="{Binding Score}"/>
+                                <GridViewColumn Header="计划学期" Width="120" DisplayMemberBinding="{Binding PlannedTerm}"/>
+                                <GridViewColumn Header="计划代码" Width="120" DisplayMemberBinding="{Binding PlannedCode}"/>
+                                <GridViewColumn Header="计划学分" Width="80" DisplayMemberBinding="{Binding PlannedCredit}"/>
+                                <GridViewColumn Header="课程性质" Width="150" DisplayMemberBinding="{Binding Type}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/WPFGUETSchedule;component/Pics/about.png" Height="25"/>
+                        <TextBlock Text="关于该软件"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Image x:Name="myImage"  Source="/WPFGUETSchedule;component/Pics/Name.png" Margin="36,43,621,148" MouseDown="myImage_MouseDown"/>
+                    <TextBlock Margin="570,43,267,174" FontSize="22"><Run Text="桂电课程表Windows版 "/><Run Text="V1.0"/><LineBreak/><Run/><LineBreak/><Run Text="基于.Net Framework 4.7.2"/><LineBreak/><Run Text=""/><LineBreak/><Run Text="Charmbracelet出品"/><LineBreak/><Run/><LineBreak/><Run Text="邮箱: "/><Run Text="billkerman@163.com"/><LineBreak/><Run/><LineBreak/><Run Text="请勿用作商业和非法用途!"/><LineBreak/><Run/><LineBreak/><Run/></TextBlock>
+                    <Image x:Name="hiddenImage" HorizontalAlignment="Left" Height="358" Margin="919,134,0,0" VerticalAlignment="Top" Width="267" Source="/WPFGUETSchedule;component/Pics/QQ_QRCode.jpg" Visibility="Hidden"/>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+
+    </Grid>
+</Window>
